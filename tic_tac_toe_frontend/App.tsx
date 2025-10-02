@@ -144,11 +144,21 @@ function App(): JSX.Element {
 
           {/* Player Indicator */}
           <View style={styles.indicatorRow}>
-            <PlayerPill label="Player X" active={!state.winner && state.current === 'X'} color={colors.primary} />
+            <PlayerPill
+              label="Player ♘"
+              active={!state.winner && state.current === 'X'}
+              color={colors.primary}
+            />
             <Text style={[styles.indicatorText, { color: indicatorColor }]} accessibilityRole="header">
-              {indicatorText}
+              {indicatorText
+                .replace('Player X', 'Player ♘')
+                .replace('Player O', 'Player ♛')}
             </Text>
-            <PlayerPill label="Player O" active={!state.winner && state.current === 'O'} color={colors.secondary} />
+            <PlayerPill
+              label="Player ♛"
+              active={!state.winner && state.current === 'O'}
+              color={colors.secondary}
+            />
           </View>
 
           {/* Board */}
@@ -283,6 +293,7 @@ function Cell({
   };
 
   const contentColor = value === 'X' ? colors.primary : colors.secondary;
+  const displayedIcon = value === 'X' ? '♘' : value === 'O' ? '♛' : '';
 
   return (
     <Animated.View style={[styles.cell, { transform: [{ scale }] }]}>
@@ -299,17 +310,24 @@ function Cell({
           },
         ]}
         accessibilityRole="button"
-        accessibilityLabel={`Cell ${value ? value : 'empty'}`}
+        accessibilityLabel={
+          value
+            ? `Cell ${value === 'X' ? 'knight' : 'queen'}`
+            : 'Cell empty'
+        }
       >
         {value && (
           <Text
             style={[
               styles.cellText,
-              { color: contentColor, textShadowColor: highlight ? `${contentColor}55` : 'transparent' },
+              {
+                color: contentColor,
+                textShadowColor: highlight ? `${contentColor}55` : 'transparent',
+              },
               highlight ? styles.cellTextHighlight : undefined,
             ]}
           >
-            {value}
+            {displayedIcon}
           </Text>
         )}
       </Pressable>
@@ -503,9 +521,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   cellText: {
-    fontSize: 44,
+    fontSize: 48,
     fontWeight: '900',
-    letterSpacing: 2,
+    letterSpacing: 0.5,
     textShadowRadius: 8,
   },
   cellTextHighlight: {
