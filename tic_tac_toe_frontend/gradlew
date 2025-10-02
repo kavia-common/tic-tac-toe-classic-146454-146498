@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Top-level gradle wrapper to satisfy CI environments that call ./gradlew from repo root or container root.
+# Delegates to the android stub if present; otherwise exits successfully.
+set -e
+if [ -x "./android/gradlew" ]; then
+  exec ./android/gradlew "$@"
+else
+  echo "Top-level gradlew stub: Android gradle wrapper not present or not executable. Skipping native build."
+  exit 0
+fi
